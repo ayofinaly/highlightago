@@ -26,17 +26,23 @@ async function loadGlossary() {
   const rows = json.table.rows;
   const glossary = Object.create(null);
 
-  for (const row of rows) {
-    const wordCell = row.c[0];
-    const defCell = row.c[1];
+for (const row of rows) {
+  const wordCell = row.c[0];
+  const defCell  = row.c[1];
 
-    if (!wordCell || !defCell) continue;
+  if (!wordCell || !wordCell.v) continue;
 
-    const word = wordCell.v.toString().trim().toLowerCase();
-    const definition = defCell.v.toString().trim();
+  const word = wordCell.v.toString().trim().toLowerCase();
 
-    glossary[word] = definition;
-  }
+  // ✅ SAFE: handles empty definitions
+  const definition =
+    defCell && defCell.v
+      ? defCell.v.toString().trim()
+      : "";
+
+  glossary[word] = definition;
+}
+
 
   return glossary;
 }
